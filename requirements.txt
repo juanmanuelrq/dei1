@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+jinja2
+python-multipart
+autogen-agentchat
+autogen-ext[azure]
+autogen-ext[openai]
+arxiv
+aiohttp
+asyncio
+beautifulsoup4
+python-dotenv
+json2html
+pymongo
