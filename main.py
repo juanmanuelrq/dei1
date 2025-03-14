@@ -158,10 +158,6 @@ def verify_credentials(credentials: HTTPBasicCredentials):
 
 
 app = FastAPI()
-app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates")
-
-
 
 @app.get("/")
 async def root(credentials:HTTPBasicCredentials=Depends(seguridad),response_class=HTMLResponse,prompt: str = "Escribe una revisión de literatura sobre tecnologías emergentes en energía"):
