@@ -160,29 +160,36 @@ def verify_credentials(credentials: HTTPBasicCredentials):
 app = FastAPI()
 
 @app.get("/")
-async def root(credentials:HTTPBasicCredentials=Depends(seguridad),response_class=HTMLResponse,prompt: str = "Escribe una revisión de literatura sobre tecnologías emergentes en energía"):
+async def root(credentials:HTTPBasicCredentials=Depends(seguridad),response_class=HTMLResponse,prompt: str = ""):
 
     verify_credentials(credentials)
 
     print("prompt",prompt)
 
-    #result = await team.run(task="Escribe una revisión de literatura sobre tecnologías emergentes en energía")
+    if prompt != "":
 
-    json_data = await team.run(task=prompt)
-    print("type(json_data)",type(json_data))
-    print("json_data",json_data)
+        #result = await team.run(task="Escribe una revisión de literatura sobre tecnologías emergentes en energía")
 
-    results = {
-        'prompt': json_data.messages[0].content,
-        'content': json_data.messages[-1].content      
-            }
-  
-    collection_agente.insert_one(results)
+        json_data = await team.run(task=prompt)
+        print("type(json_data)",type(json_data))
+        print("json_data",json_data)
+
+        results = {
+            'prompt': json_data.messages[0].content,
+            'content': json_data.messages[-1].content      
+                }
+    
+        collection_agente.insert_one(results)
 
     try:
         return HTMLResponse(content= str(results), status_code=200)
     except Exception as e:
-        return Response(content=json.dumps({"error": str(e)}), status_code=500)
+        results = {
+            'Uso': 'ingrese a /docs y escriba un prompt',
+            'Ejemplo': 'Escribe una revisión de literatura sobre tecnologías emergentes en energía'
+            }
+
+        return HTMLResponse(content=str(results), status_code=500)
 
 if __name__ == '__main__':
     uvicorn.run('main:app', host='0.0.0.0', port=8000)
